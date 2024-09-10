@@ -36,6 +36,16 @@ const addStudent = (req, res) => {
 
 const deleteStudent = (req,res) => {
   const id = parseInt(req.params.id);
+  pool.query(queries.getStudentsById, [id], (error, results) => {
+    const noStudnetFound = !results.rows.length;
+    if (noStudnetFound){
+      res.send("Student does not exist in database, could not be deleted.");
+    }
+  pool.query(queries.deleteStudent, [id], (error, results) => {
+    if(error) throw error;
+    res.status(200).send("Student deleted successfully!");
+  });
+  })
 }
 
 module.exports = {
